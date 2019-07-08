@@ -15,6 +15,7 @@
   },
   "devDependencies": {
     "gulp-browserify": "^0.5.1",
+    "gulp-compass": "^2.1.0",
     "jquery": "^3.4.1",
     "mustache": "^3.0.1"
   }
