@@ -12,5 +12,10 @@
     "gulp-coffee": "^3.0.3",
     "gulp-concat": "^2.6.1",
     "gulp-util": "^3.0.8"
+  },
+  "devDependencies": {
+    "gulp-browserify": "^0.5.1",
+    "jquery": "^3.4.1",
+    "mustache": "^3.0.1"
   }
 }
