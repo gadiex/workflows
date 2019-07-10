@@ -28,7 +28,7 @@ gulp.task('js', function() {
     .pipe(gulp.dest('builds/development/js'))
 });
 
-gulp.task('compass', async function() {
+gulp.task('compass', function() {
   gulp.src(sassSources)
     .pipe(compass({
       sass: 'components/sass',
@@ -39,3 +39,6 @@ gulp.task('compass', async function() {
     .pipe(gulp.dest('builds/development/css'))
 });
 
+//not working - [xxx tasks] runs before 'default' task
+//no need to specify "gulp default" for 'default' task; just use "gulp" command
+//gulp.task('default', ['coffee', 'js', 'compass']);
