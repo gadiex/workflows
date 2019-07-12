@@ -46,4 +46,4 @@ gulp.task('watch', async function() {
 });
 //not working - [xxx tasks] - use gulp.series() or gulp.parallel() for gulp v4
 //no need to specify "gulp default" for 'default' task; just use "gulp" command
-gulp.task('default', gulp.series('coffee', 'js', 'compass'));
+gulp.task('default', gulp.series('coffee', 'js', 'compass','watch'));
