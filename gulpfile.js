@@ -14,21 +14,21 @@ var jsSources = [
 ];
 var sassSources = ['components/sass/style.scss'];
 
-gulp.task('coffee', function() {
+gulp.task('coffee', async function() {
   gulp.src(coffeeSources)
     .pipe(coffee({ bare: true })
       .on('error', gutil.log))
     .pipe(gulp.dest('components/scripts'))
 });
 
-gulp.task('js', function() {
+gulp.task('js', async function() {
   gulp.src(jsSources)
     .pipe(concat('script.js'))
     .pipe(browserify())
     .pipe(gulp.dest('builds/development/js'))
 });
 
-gulp.task('compass', function() {
+gulp.task('compass', async function() {
   gulp.src(sassSources)
     .pipe(compass({
       sass: 'components/sass',
@@ -39,6 +39,11 @@ gulp.task('compass', function() {
     .pipe(gulp.dest('builds/development/css'))
 });
 
-//not working - [xxx tasks] runs before 'default' task
+gulp.task('watch', async function() {
+  gulp.watch(coffeeSources,gulp.series('coffee'));
+  gulp.watch(jsSources,gulp.series('js'));
+  gulp.watch('components/sass/*.scss',gulp.series('compass'));
+});
+//not working - [xxx tasks] - use gulp.series() or gulp.parallel() for gulp v4
 //no need to specify "gulp default" for 'default' task; just use "gulp" command
-//gulp.task('default', ['coffee', 'js', 'compass']);
+gulp.task('default', gulp.series('coffee', 'js', 'compass'));
