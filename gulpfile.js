@@ -14,6 +14,8 @@ var jsSources = [
   'components/scripts/template.js'
 ];
 var sassSources = ['components/sass/style.scss'];
+var htmlSources = ['builds/development/*.html'];
+var jsonSources = ['builds/development/js/*.json'];
 
 gulp.task('coffee', async function() {
   gulp.src(coffeeSources)
@@ -49,11 +51,23 @@ gulp.task('connect', async function() {
   });
 });
 
+gulp.task('html', async function() {
+  gulp.src(htmlSources)
+    .pipe(connect.reload())
+});
+
+gulp.task('json', async function() {
+  gulp.src(jsonSources)
+    .pipe(connect.reload())
+});
+
 gulp.task('watch', async function() {
   gulp.watch(coffeeSources,gulp.series('coffee'));
   gulp.watch(jsSources,gulp.series('js'));
   gulp.watch('components/sass/*.scss',gulp.series('compass'));
+  gulp.watch(htmlSources,gulp.series('html'));
+  gulp.watch(jsonSources,gulp.series('json'));
 });
-//not working - [xxx tasks] - use gulp.series() or gulp.parallel() for gulp v4
+//not working for gulp v4 - [xxx tasks] - use gulp.series() or gulp.parallel() 
 //no need to specify "gulp default" for 'default' task; just use "gulp" command
-gulp.task('default', gulp.series('coffee', 'js', 'compass','connect','watch'));
+gulp.task('default', gulp.series('html','json','coffee', 'js', 'compass','connect','watch'));
