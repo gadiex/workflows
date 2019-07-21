@@ -6,6 +6,8 @@ var gulp = require('gulp'),
     uglify = require('gulp-uglify-es').default,
     minifyHTML = require('gulp-minify-html'),
     jsonminify = require('gulp-jsonminify'),
+    imagemin = require('gulp-imagemin'),
+    pngcrush = require('imagemin-pngcrush'),
     compass = require('gulp-compass'),
     connect = require('gulp-connect'),
     concat = require('gulp-concat');
@@ -83,6 +85,17 @@ gulp.task('html', async function() {
     .pipe(connect.reload())
 });
 
+gulp.task('images', async function() {
+  gulp.src('builds/development/images/**/*.*')
+    .pipe(gulpif(env === 'production', imagemin({
+      progressive: true,
+      svgoPlugins: [{ removeViewBox: false }],
+      use: [pngcrush()]
+  })))
+    .pipe(gulpif(env === 'production', gulp.dest(OutputDir + 'images')))
+    .pipe(connect.reload())
+});
+
 gulp.task('json', async function() {
   gulp.src('builds/development/js/*.json')
     .pipe(gulpif(env === 'production', jsonminify()))
@@ -99,4 +112,4 @@ gulp.task('watch', async function() {
 });
 //not working for gulp v4 - [xxx tasks] - use gulp.series() or gulp.parallel() 
 //no need to specify "gulp default" for 'default' task; just use "gulp" command
-gulp.task('default', gulp.series('html','json','coffee', 'js', 'compass','connect','watch'));
+gulp.task('default', gulp.series('html','json','coffee', 'js', 'compass','images','connect','watch'));
