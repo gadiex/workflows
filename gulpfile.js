@@ -3,7 +3,8 @@ var gulp = require('gulp'),
     coffee = require('gulp-coffee'),
     browserify = require('gulp-browserify'),
     gulpif = require('gulp-if'),
-    uglify = require('gulp-uglify'),
+    uglify = require('gulp-uglify-es').default,
+    minifyHTML = require('gulp-minify-html'),
     compass = require('gulp-compass'),
     connect = require('gulp-connect'),
     concat = require('gulp-concat');
@@ -49,8 +50,8 @@ gulp.task('js', async function() {
   gulp.src(jsSources)
     .pipe(concat('script.js'))
     .pipe(browserify())
-//    .pipe(gulpif(env === 'production', uglify())
-//       .on('error', gutil.log))
+    .pipe(gulpif(env === 'production', uglify())
+      .on('error', gutil.log))
     .pipe(gulp.dest(OutputDir + 'js'))
     .pipe(connect.reload())
 });
@@ -75,7 +76,9 @@ gulp.task('connect', async function() {
 });
 
 gulp.task('html', async function() {
-  gulp.src(htmlSources)
+  gulp.src('builds/development/*.html')
+    .pipe(gulpif(env === 'production', minifyHTML()))
+    .pipe(gulpif(env === 'production', gulp.dest(OutputDir)))
     .pipe(connect.reload())
 });
 
@@ -88,7 +91,7 @@ gulp.task('watch', async function() {
   gulp.watch(coffeeSources,gulp.series('coffee'));
   gulp.watch(jsSources,gulp.series('js'));
   gulp.watch('components/sass/*.scss',gulp.series('compass'));
-  gulp.watch(htmlSources,gulp.series('html'));
+  gulp.watch('builds/development/*.html',gulp.series('html'));
   gulp.watch(jsonSources,gulp.series('json'));
 });
 //not working for gulp v4 - [xxx tasks] - use gulp.series() or gulp.parallel() 
