@@ -5,6 +5,7 @@ var gulp = require('gulp'),
     gulpif = require('gulp-if'),
     uglify = require('gulp-uglify-es').default,
     minifyHTML = require('gulp-minify-html'),
+    jsonminify = require('gulp-jsonminify'),
     compass = require('gulp-compass'),
     connect = require('gulp-connect'),
     concat = require('gulp-concat');
@@ -83,7 +84,9 @@ gulp.task('html', async function() {
 });
 
 gulp.task('json', async function() {
-  gulp.src(jsonSources)
+  gulp.src('builds/development/js/*.json')
+    .pipe(gulpif(env === 'production', jsonminify()))
+    .pipe(gulpif(env === 'production', gulp.dest('builds/production/js/')))
     .pipe(connect.reload())
 });
 
@@ -92,7 +95,7 @@ gulp.task('watch', async function() {
   gulp.watch(jsSources,gulp.series('js'));
   gulp.watch('components/sass/*.scss',gulp.series('compass'));
   gulp.watch('builds/development/*.html',gulp.series('html'));
-  gulp.watch(jsonSources,gulp.series('json'));
+  gulp.watch('builds/development/js/*.json',gulp.series('json'));
 });
 //not working for gulp v4 - [xxx tasks] - use gulp.series() or gulp.parallel() 
 //no need to specify "gulp default" for 'default' task; just use "gulp" command
